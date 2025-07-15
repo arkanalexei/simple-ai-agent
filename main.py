@@ -18,16 +18,16 @@ async def handle_query(request: QueryRequest):
   tool_used = classify_tool(request.query)
   
   if tool_used == "math":
-    result = math_tool.run(request.query)
+    result = await math_tool.run(request.query)
     
     if "Error" in result:  # Fallback to LLM if math fails
       tool_used = "llm"
-      result = llm_tool.run(request.query)
+      result = await llm_tool.run(request.query)
       
   elif tool_used == "weather":
-    result = weather_tool.run(request.query)
+    result = await weather_tool.run(request.query)
   else:
-    result = llm_tool.run(request.query)
+    result = await llm_tool.run(request.query)
   
   return {
     "query": request.query,

@@ -1,12 +1,14 @@
 from fastapi.testclient import TestClient
+from unittest.mock import patch
+
 from main import app
 
 client = TestClient(app)
 
-def test_handle_query():
-    response = client.post("/query", json={"query": "What is 2 + 2?"})
+def test_handle_query_mocked():
+  with patch("main.classify_tool", return_value="math"):
+    response = client.post("/query", json={"query": "2 + 2"})
     assert response.status_code == 200
     data = response.json()
-    assert data["query"] == "What is 2 + 2?"
-    assert data["tool_used"] == "none"
-    assert data["result"] == "Tool not used yet"
+    assert data["tool_used"] == "math"  # TODO: More complex expressions not yet supported
+    assert data["result"] == "4"

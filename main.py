@@ -20,13 +20,7 @@ async def handle_query(request: QueryRequest):
     tool_used = classify_tool(request.query)
     
     if tool_used == "math":
-      
-      try:
-        result = await math_tool.run(request.query)
-      except ToolError as e:
-        tool_used = "llm"
-        result = await llm_tool.run(request.query)
-        
+      result = await math_tool.run(request.query)
     elif tool_used == "weather":
       result = await weather_tool.run(request.query)
     else:

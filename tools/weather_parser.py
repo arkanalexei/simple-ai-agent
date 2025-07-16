@@ -30,6 +30,11 @@ async def extract_city(query: str) -> str:
   """
   try:
     result = await chain.ainvoke({"query": query})
+    
+    if not result.city:
+      logger.error(f"No city extracted from query: {query}")
+      return "San Francisco"
+    
     return result.city
   except Exception as e:
     logger.error(f"Failed to extract city from query '{query}': {e}")

@@ -1,4 +1,4 @@
-from unittest.mock import AsyncMock, patch
+from unittest.mock import MagicMock, AsyncMock, patch
 
 import pytest
 
@@ -9,12 +9,12 @@ from utils.errors import ToolError
 @pytest.mark.asyncio
 @patch("httpx.AsyncClient.get", new_callable=AsyncMock)
 async def test_get_weather_success(mock_get):
-    mock_response = AsyncMock()
-    mock_response.json = AsyncMock(return_value={
+    mock_response = MagicMock()
+    mock_response.json.return_value = {
         "main": {"temp": 20},
         "weather": [{"description": "clear sky"}]
-    })
-    mock_response.raise_for_status = AsyncMock()
+    }
+    mock_response.raise_for_status.return_value = None
     mock_get.return_value = mock_response
 
     result = await weather_api.get_weather("Madrid")

@@ -9,7 +9,7 @@ from langchain_core.messages import HumanMessage, SystemMessage, BaseMessage
 from typing_extensions import TypedDict
 
 from tools.math_calculator import calculator
-from utils.get_llm import get_llm
+from utils.llm import get_llm
 
 
 llm = get_llm()

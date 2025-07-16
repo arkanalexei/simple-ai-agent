@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 from agent import classify_tool
 from tools import math_tool, weather_tool, llm_tool
-from utils.errors import AppError
+from utils.errors import AppError, ToolError
 
 load_dotenv()
 
@@ -20,9 +20,10 @@ async def handle_query(request: QueryRequest):
     tool_used = classify_tool(request.query)
     
     if tool_used == "math":
-      result = await math_tool.run(request.query)
       
-      if "Error" in result:  # Fallback to LLM if math fails
+      try:
+        result = await math_tool.run(request.query)
+      except ToolError as e:
         tool_used = "llm"
         result = await llm_tool.run(request.query)
         

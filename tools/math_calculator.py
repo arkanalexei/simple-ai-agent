@@ -4,6 +4,8 @@ import math
 import numexpr
 from langchain_core.tools import tool
 
+from utils.errors import ToolError
+
 
 @tool
 def calculator(expression: str) -> str:
@@ -18,10 +20,14 @@ def calculator(expression: str) -> str:
       "37593**(1/5)" for "37593^(1/5)"
   """
   local_dict = {"pi": math.pi, "e": math.e}
-  return str(
-    numexpr.evaluate(
-      expression.strip(),
-      global_dict={},  # restrict access to globals
-      local_dict=local_dict,  # add common mathematical functions
+  
+  try:
+    return str(
+      numexpr.evaluate(
+        expression.strip(),
+        global_dict={},  # restrict access to globals
+        local_dict=local_dict,  # add common mathematical functions
+      )
     )
-  )
+  except Exception as e:
+    raise ToolError(f"Math evaluation failed for '{expression}': {e}")

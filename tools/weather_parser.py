@@ -3,6 +3,10 @@ from langchain_core.output_parsers import PydanticOutputParser
 from langchain_openai import ChatOpenAI
 from langchain.prompts import PromptTemplate
 
+from utils.logging import get_logger
+
+logger = get_logger("weather_parser")
+
 
 class WeatherQuery(BaseModel):
   city: str
@@ -28,5 +32,5 @@ async def extract_city(query: str) -> str:
     result = await chain.ainvoke({"query": query})
     return result.city
   except Exception as e:
-    print(f"Error extracting city: {e}")
+    logger.error(f"Failed to extract city from query '{query}': {e}")
     return "San Francisco"  # Default city if extraction fails

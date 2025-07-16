@@ -3,6 +3,9 @@ import os
 from dotenv import load_dotenv
 
 from utils.errors import ToolError
+from utils.logging import get_logger
+
+logger = get_logger("weather_api")
 
 load_dotenv()
 API_KEY = os.getenv("OPENWEATHERMAP_API_KEY")
@@ -23,4 +26,5 @@ async def get_weather(city: str) -> str:
       desc = data["weather"][0]["description"]
       return f"It's {desc} and {temp}°C in {city}."
   except Exception as e:
+    logger.error(f"Weather API failed for city '{city}': {e}")
     raise ToolError(f"Weather API failed for city '{city}': {e}")

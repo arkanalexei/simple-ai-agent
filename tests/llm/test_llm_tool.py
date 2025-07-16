@@ -11,3 +11,14 @@ async def test_llm_tool_success(mock_llm):
 
     result = await llm_tool.run("What is the capital of France?")
     assert result == "Paris"
+    
+@pytest.mark.asyncio
+@patch("tools.llm_tool.llm", new_callable=AsyncMock)
+async def test_llm_tool_failure(mock_llm):
+    mock_llm.ainvoke = AsyncMock(side_effect=Exception("Timeout"))
+
+    with pytest.raises(ToolError) as exc_info:
+        await llm_tool.run("What's 2 + 2?")
+    
+    assert "failed to process" in str(exc_info.value).lower()
+    

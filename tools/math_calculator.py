@@ -5,6 +5,9 @@ import numexpr
 from langchain_core.tools import tool
 
 from utils.errors import ToolError
+from utils.logging import get_logger
+
+logger = get_logger("math_calculator")
 
 
 @tool
@@ -30,4 +33,5 @@ def calculator(expression: str) -> str:
       )
     )
   except Exception as e:
+    logger.error(f"Math evaluation failed for '{expression}': {e}")
     raise ToolError(f"Math evaluation failed for '{expression}': {e}")

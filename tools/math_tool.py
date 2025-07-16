@@ -1,16 +1,20 @@
 # Based on https://python.langchain.com/docs/versions/migrating_chains/llm_math_chain/
 
 from typing import Annotated, Sequence
+
+from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
 from langchain_core.runnables import RunnableConfig
 from langgraph.graph import END, StateGraph
-from langgraph.prebuilt.tool_node import ToolNode
 from langgraph.graph.message import add_messages
-from langchain_core.messages import HumanMessage, SystemMessage, BaseMessage
+from langgraph.prebuilt.tool_node import ToolNode
 from typing_extensions import TypedDict
 
 from tools.math_calculator import calculator
+from utils.errors import ToolError
 from utils.llm import get_llm
+from utils.logging import get_logger
 
+logger = get_logger("math_tool")
 
 llm = get_llm()
 tools = [calculator]
@@ -50,6 +54,10 @@ async def run(query: str) -> str:
       HumanMessage(content=query)
     ]
   }
-  result = await chain.ainvoke(state)
-  final_message = result["messages"][-1]
-  return final_message.content.strip()
+  try:
+    result = await chain.ainvoke(state)
+    final_message = result["messages"][-1]
+    return final_message.content.strip()
+  except Exception as e:
+    logger.error(f"Math calculation failed: {str(e)}")
+    raise ToolError(f"Math calculation failed: {str(e)}")

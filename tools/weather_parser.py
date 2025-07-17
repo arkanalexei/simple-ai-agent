@@ -23,16 +23,14 @@ Query: {query}
 """
 ).partial(format_instructions=parser.get_format_instructions())
 
-llm = get_llm()
-
-chain = prompt | llm | parser
-
 
 async def extract_city(query: str) -> str:
     """
     Extract the city name from the query using the LLM.
     """
     try:
+        llm = get_llm()
+        chain = prompt | llm | parser
         result: WeatherQuery = await chain.ainvoke({"query": query})
 
         if not result.city:

@@ -6,10 +6,10 @@ from utils.logging import get_logger
 
 logger = get_logger("llm_tool")
 
-llm = get_llm()
-
 
 async def run(query: str) -> str:
+    llm = get_llm()
+
     try:
         response: AIMessage = await llm.ainvoke(query)
         return str(response.content.strip())

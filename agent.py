@@ -3,8 +3,6 @@ from langchain_core.runnables import RunnableSerializable
 
 from utils.llm import get_llm
 
-llm = get_llm()
-
 prompt = PromptTemplate.from_template(
     """
 You are a smart classifier. Classify the user's query into one of the following tools:
@@ -19,6 +17,7 @@ Tool:
 
 
 def get_chain() -> RunnableSerializable:
+    llm = get_llm()
     return prompt | llm
 
 

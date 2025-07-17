@@ -8,3 +8,10 @@ line-length = 100
 [tool.ruff.lint]
 select = ["E", "F", "I", "W"]  # Errors, flakes, import issues, warnings
 fixable = ["ALL"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+disallow_untyped_defs = true
+warn_unused_ignores = true
+ignore_missing_imports = true

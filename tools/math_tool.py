@@ -1,6 +1,6 @@
 # Based on https://python.langchain.com/docs/versions/migrating_chains/llm_math_chain/
 
-from typing import Annotated, Sequence
+from typing import Annotated, Dict, Sequence
 
 from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
 from langchain_core.runnables import RunnableConfig
@@ -27,12 +27,12 @@ class ChainState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], add_messages]
 
 
-async def acall_chain(state: ChainState, config: RunnableConfig):
+async def acall_chain(state: ChainState, config: RunnableConfig) -> Dict[str, list[BaseMessage]]:
     response = await llm_with_tools.ainvoke(state["messages"], config)
     return {"messages": [response]}
 
 
-async def acall_model(state: ChainState, config: RunnableConfig):
+async def acall_model(state: ChainState, config: RunnableConfig) -> Dict[str, list[BaseMessage]]:
     response = await llm.ainvoke(state["messages"], config)
     return {"messages": [response]}
 

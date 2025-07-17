@@ -1,11 +1,10 @@
-from langchain_openai import ChatOpenAI
-
 from utils.errors import ToolError
+from utils.llm import get_llm
 from utils.logging import get_logger
 
 logger = get_logger("llm_tool")
 
-llm = ChatOpenAI(model="gpt-4.1-nano", temperature=0)
+llm = get_llm()
 
 
 async def run(query: str) -> str:

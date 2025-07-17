@@ -1,7 +1,8 @@
 from langchain_core.prompts import PromptTemplate
-from langchain_openai import ChatOpenAI
 
-llm = ChatOpenAI(model="gpt-4.1-nano", temperature=0)
+from utils.llm import get_llm
+
+llm = get_llm()
 
 prompt = PromptTemplate.from_template(
     """

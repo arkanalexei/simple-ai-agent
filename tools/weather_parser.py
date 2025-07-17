@@ -1,8 +1,8 @@
 from langchain.prompts import PromptTemplate
 from langchain_core.output_parsers import PydanticOutputParser
-from langchain_openai import ChatOpenAI
 from pydantic import BaseModel
 
+from utils.llm import get_llm
 from utils.logging import get_logger
 
 logger = get_logger("weather_parser")
@@ -23,7 +23,7 @@ Query: {query}
 """
 ).partial(format_instructions=parser.get_format_instructions())
 
-llm = ChatOpenAI(model="gpt-4.1-nano", temperature=0)
+llm = get_llm()
 
 chain = prompt | llm | parser
 

@@ -1,8 +1,10 @@
-import pytest
 from types import SimpleNamespace
 from unittest.mock import AsyncMock, patch
-from utils.errors import ToolError
+
+import pytest
+
 from tools import llm_tool
+from utils.errors import ToolError
 
 
 @pytest.mark.asyncio
@@ -12,7 +14,8 @@ async def test_llm_tool_success(mock_llm):
 
     result = await llm_tool.run("What is the capital of France?")
     assert result == "Paris"
-    
+
+
 @pytest.mark.asyncio
 @patch("tools.llm_tool.llm", new_callable=AsyncMock)
 async def test_llm_tool_failure(mock_llm):
@@ -20,6 +23,5 @@ async def test_llm_tool_failure(mock_llm):
 
     with pytest.raises(ToolError) as exc_info:
         await llm_tool.run("What's 2 + 2?")
-    
+
     assert "failed to process" in str(exc_info.value).lower()
-    

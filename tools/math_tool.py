@@ -20,6 +20,7 @@ llm = get_llm()
 tools = [calculator]
 llm_with_tools = llm.bind_tools(tools, tool_choice="any")
 
+
 class ChainState(TypedDict):
     """LangGraph state."""
 
@@ -46,18 +47,20 @@ graph_builder.add_edge("execute_tool", "call_model")
 graph_builder.add_edge("call_model", END)
 chain = graph_builder.compile()
 
+
 async def run(query: str) -> str:
-  state = {
-    "messages": [
-      
-      SystemMessage(content="You are a calculator assistant. Only respond with the final number."), 
-      HumanMessage(content=query)
-    ]
-  }
-  try:
-    result = await chain.ainvoke(state)
-    final_message = result["messages"][-1]
-    return final_message.content.strip()
-  except Exception as e:
-    logger.error(f"Math calculation failed: {str(e)}")
-    raise ToolError(f"Math calculation failed: {str(e)}")
+    state = {
+        "messages": [
+            SystemMessage(
+                content="You are a calculator assistant. Only respond with the final number."
+            ),
+            HumanMessage(content=query),
+        ]
+    }
+    try:
+        result = await chain.ainvoke(state)
+        final_message = result["messages"][-1]
+        return final_message.content.strip()
+    except Exception as e:
+        logger.error(f"Math calculation failed: {str(e)}")
+        raise ToolError(f"Math calculation failed: {str(e)}")

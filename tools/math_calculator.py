@@ -11,7 +11,7 @@ from utils.logging import get_logger
 logger = get_logger("math_calculator")
 
 
-@tool
+@tool  # type: ignore[misc]
 def calculator(expression: str) -> str:
     """
     Calculate expression using Python's numexpr library.

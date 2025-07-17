@@ -8,7 +8,7 @@ from utils.logging import get_logger
 logger = get_logger("weather_parser")
 
 
-class WeatherQuery(BaseModel):
+class WeatherQuery(BaseModel):  # type: ignore[misc]
     city: str
 
 
@@ -33,7 +33,7 @@ async def extract_city(query: str) -> str:
     Extract the city name from the query using the LLM.
     """
     try:
-        result = await chain.ainvoke({"query": query})
+        result: WeatherQuery = await chain.ainvoke({"query": query})
 
         if not result.city:
             logger.error(f"No city extracted from query: {query}")

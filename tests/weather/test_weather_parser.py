@@ -13,9 +13,9 @@ class EmptyWeatherResult:
     city = None
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio  # type: ignore[misc]
 @patch("langchain_core.runnables.base.RunnableSequence.ainvoke", new_callable=AsyncMock)
-async def test_extract_city_success(mock_ainvoke):
+async def test_extract_city_success(mock_ainvoke: AsyncMock) -> None:
     mock_ainvoke.return_value = FakeWeatherResult()
     result = await weather_parser.extract_city("Weather in Berlin?")
 
@@ -23,10 +23,12 @@ async def test_extract_city_success(mock_ainvoke):
     mock_ainvoke.assert_awaited_once_with({"query": "Weather in Berlin?"})
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio  # type: ignore[misc]
 @patch("langchain_core.runnables.base.RunnableSequence.ainvoke", new_callable=AsyncMock)
 @patch("tools.weather_parser.logger")
-async def test_extract_city_fallback_on_exception(mock_logger, mock_ainvoke):
+async def test_extract_city_fallback_on_exception(
+    mock_logger: AsyncMock, mock_ainvoke: AsyncMock
+) -> None:
     mock_ainvoke.side_effect = RuntimeError("LLM crashed")
     result = await weather_parser.extract_city("What's the weather in Atlantis?")
 
@@ -38,10 +40,10 @@ async def test_extract_city_fallback_on_exception(mock_logger, mock_ainvoke):
     assert "Atlantis" in logged_msg
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio  # type: ignore[misc]
 @patch("langchain_core.runnables.base.RunnableSequence.ainvoke", new_callable=AsyncMock)
 @patch("tools.weather_parser.logger")
-async def test_extract_city_no_city_given(mock_logger, mock_ainvoke):
+async def test_extract_city_no_city_given(mock_logger: AsyncMock, mock_ainvoke: AsyncMock) -> None:
     mock_ainvoke.return_value = EmptyWeatherResult()
     result = await weather_parser.extract_city("What's the weather?")
 

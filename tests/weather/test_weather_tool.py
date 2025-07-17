@@ -5,10 +5,12 @@ import pytest
 from tools import weather_tool
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio  # type: ignore[misc]
 @patch("tools.weather_tool.get_weather", new_callable=AsyncMock)
 @patch("tools.weather_tool.extract_city", new_callable=AsyncMock)
-async def test_weather_tool_success(mock_extract_city, mock_get_weather):
+async def test_weather_tool_success(
+    mock_extract_city: AsyncMock, mock_get_weather: AsyncMock
+) -> None:
     mock_extract_city.return_value = "Tokyo"
     mock_get_weather.return_value = "It's sunny and 30°C in Tokyo."
 
@@ -19,10 +21,12 @@ async def test_weather_tool_success(mock_extract_city, mock_get_weather):
     mock_get_weather.assert_called_once_with("Tokyo")
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio  # type: ignore[misc]
 @patch("tools.weather_tool.get_weather", new_callable=AsyncMock)
 @patch("tools.weather_tool.extract_city", new_callable=AsyncMock)
-async def test_weather_tool_failure(mock_extract_city, mock_get_weather):
+async def test_weather_tool_failure(
+    mock_extract_city: AsyncMock, mock_get_weather: AsyncMock
+) -> None:
     mock_extract_city.return_value = "Moon"
     mock_get_weather.side_effect = Exception("City not found")
 

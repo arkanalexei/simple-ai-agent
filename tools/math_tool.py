@@ -60,7 +60,7 @@ async def run(query: str) -> str:
     try:
         result = await chain.ainvoke(state)
         final_message = result["messages"][-1]
-        return final_message.content.strip()
+        return str(final_message.content.strip())
     except Exception as e:
         logger.error(f"Math calculation failed: {str(e)}")
         raise ToolError(f"Math calculation failed: {str(e)}")

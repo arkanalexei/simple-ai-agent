@@ -1,4 +1,5 @@
 from langchain_core.prompts import PromptTemplate
+from langchain_core.runnables import RunnableSerializable
 
 from utils.llm import get_llm
 
@@ -17,7 +18,7 @@ Tool:
 )
 
 
-def get_chain():
+def get_chain() -> RunnableSerializable:
     return prompt | llm
 
 
@@ -27,7 +28,7 @@ def classify_tool(query: str) -> str:
     """
     chain = get_chain()
     response = chain.invoke({"query": query})
-    response = response.content.strip().lower()
+    response = str(response.content.strip().lower())
 
     if response in {"math", "weather", "llm"}:
         return response

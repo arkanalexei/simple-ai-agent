@@ -11,12 +11,12 @@ load_dotenv()
 app = FastAPI()
 
 
-class QueryRequest(BaseModel):
+class QueryRequest(BaseModel):  # type: ignore[misc]
     query: str
 
 
-@app.post("/query")
-async def handle_query(request: QueryRequest):
+@app.post("/query")  # type: ignore[misc]
+async def handle_query(request: QueryRequest) -> dict[str, str | None]:
     try:
         tool_used = classify_tool(request.query)
 

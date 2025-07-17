@@ -109,3 +109,9 @@ Server will be available at `http://localhost:8000`
   Stream completed
   ```
 
+## 🐳 Docker
+
+```bash
+docker build -t simple-ai-agent .
+docker run -p 8000:8000 --env-file .env simple-ai-agent
+```

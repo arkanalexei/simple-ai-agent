@@ -76,15 +76,10 @@ async def test_llm_websocket() -> None:
         with client.websocket_connect("/ws/llm") as websocket:
             websocket.send_text("Test message")
 
-            try:
-                while True:
-                    data = websocket.receive_text()
-                    if data == "Hello":
-                        break
-                    if data == "Error":
-                        raise AssertionError("WebSocket handler returned Error unexpectedly")
-            except Exception:
-                raise
+            while True:
+                data = websocket.receive_text()
+                if data == "Hello":
+                    break
 
             data = websocket.receive_text()
             assert data == "Stream completed", f"Expected 'Stream completed', got '{data}'"

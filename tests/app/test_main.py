@@ -4,6 +4,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from main import app
+from utils.errors import AppError
 
 client = TestClient(app)
 
@@ -43,3 +44,16 @@ async def test_handle_query_llm() -> None:
             data = response.json()
             assert data["tool_used"] == "llm"
             assert data["result"] == "Paris is the capital of France"
+
+
+@pytest.mark.asyncio  # type: ignore[misc]
+async def test_handle_query_app_error() -> None:
+    with patch("main.classify_tool", return_value="math"):
+        with patch("main.math_tool.run", new_callable=AsyncMock) as mock_run:
+            mock_run.side_effect = AppError("Test error")
+            response = client.post("/query", json={"query": "invalid"})
+            assert response.status_code == 200
+            data = response.json()
+            assert data["tool_used"] == "none"
+            assert data["result"] is None
+            assert "Test error" in data["error"]

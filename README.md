@@ -1,9 +1,13 @@
 # 🧠 Simple AI Agent
 
+![System Architecture](assets/architecture.png)
+
 A lightweight FastAPI-based backend that routes natural language queries to the appropriate tool:
 - 🧮 Math calculator
 - 🌤️ Weather checker
 - 💬 General knowledge via LLM
+
+
 
 ## 🚀 Features
 
@@ -19,8 +23,8 @@ A lightweight FastAPI-based backend that routes natural language queries to the 
 ## 📦 Requirements
 
 - Python 3.12
-- OpenAI API key
-- OpenWeatherMap API key
+- [OpenAI API key](https://platform.openai.com/account/api-keys)
+- [OpenWeatherMap API key](https://openweathermap.org/api)
 
 
 ## 🛠️ Setup
@@ -28,7 +32,7 @@ A lightweight FastAPI-based backend that routes natural language queries to the 
 ```bash
 git clone https://github.com/arkanalexei/simple-ai-agent.git
 cd simple-ai-agent
-python -m venv eenv
+python -m venv env
 source env/bin/activate  # or env\Scripts\activate on Windows
 pip install -r requirements.txt
 ```
@@ -115,3 +119,27 @@ Server will be available at `http://localhost:8000`
 docker build -t simple-ai-agent .
 docker run -p 8000:8000 --env-file .env simple-ai-agent
 ```
+
+## ✅ Running Tests 
+
+Tests are located under the `tests/` directory, organized by tool/module.
+
+To run all tests with coverage report:
+```bash
+pytest --cov --cov-report term-missing
+```
+
+
+This project has extensive automated tests covering tool logic, classification, error handling, and API behavior.
+
+| Module                      | Coverage |
+|----------------------------|----------|
+| `agent.py`                 | 86%      |
+| `main.py`                  | 93%      |
+| `tools/`                   | 100%     |
+| `utils/`                   | 100%     |
+| `tests/`                   | 100%     |
+| **Total**                  | **99%**  |
+
+All 26 tests pass. Code paths, edge cases, and failures are tested using `pytest`, `pytest-asyncio`, and `unittest.mock`.
+

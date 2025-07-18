@@ -1,4 +1,5 @@
-from unittest.mock import AsyncMock, patch
+from typing import Any, AsyncGenerator
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 from fastapi.testclient import TestClient
@@ -57,3 +58,33 @@ async def test_handle_query_app_error() -> None:
             assert data["tool_used"] == "none"
             assert data["result"] is None
             assert "Test error" in data["error"]
+
+
+@pytest.mark.asyncio  # type: ignore[misc]
+async def test_llm_websocket() -> None:
+    with patch("main.get_llm") as mock_get_llm:
+        mock_llm = MagicMock()
+        mock_chunk = MagicMock()
+        mock_chunk.content = "Hello"
+
+        async def mock_astream(*args: Any, **kwargs: Any) -> AsyncGenerator[MagicMock, None]:
+            yield mock_chunk
+
+        mock_llm.astream = mock_astream
+        mock_get_llm.return_value = mock_llm
+
+        with client.websocket_connect("/ws/llm") as websocket:
+            websocket.send_text("Test message")
+
+            try:
+                while True:
+                    data = websocket.receive_text()
+                    if data == "Hello":
+                        break
+                    if data == "Error":
+                        raise AssertionError("WebSocket handler returned Error unexpectedly")
+            except Exception:
+                raise
+
+            data = websocket.receive_text()
+            assert data == "Stream completed", f"Expected 'Stream completed', got '{data}'"

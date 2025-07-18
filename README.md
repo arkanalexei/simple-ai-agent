@@ -18,6 +18,7 @@ A lightweight FastAPI-based backend that routes natural language queries to the 
 - LLM tool for open-ended questions (uses OpenAI)
 - WebSocket streaming endpoint for real-time LLM responses
 - Error handling and logging included
+- Dockerized app for easy deployment anywhere
 
 
 ## 📦 Requirements

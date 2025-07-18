@@ -23,3 +23,10 @@ def test_mock_classify_tool_llm(mock_chain_func: MagicMock) -> None:
     mock_chain = mock_chain_func.return_value
     mock_chain.invoke.return_value = SimpleNamespace(content="llm")
     assert classify_tool("What is the capital of France?") == "llm"
+
+
+@patch("agent.get_chain")
+def test_mock_classify_tool_fallback(mock_chain_func: MagicMock) -> None:
+    mock_chain = mock_chain_func.return_value
+    mock_chain.invoke.return_value = SimpleNamespace(content="invalid_tool")
+    assert classify_tool("Random query") == "llm"
